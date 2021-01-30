@@ -13,8 +13,7 @@
           ></v-date-picker>
         </v-card>
 
-        <v-card
-         color="error" dark>
+        <v-card color="error" dark>
           <v-card-text class="display-1 text-center">
             {{ value }}
           </v-card-text>
@@ -45,8 +44,10 @@ export default {
       let ddmmyy = arrayDate[2] + '-' + arrayDate[1] + '-' + arrayDate[0]
 
       try {
-
-        this.showLoading({tittle:'Accediendo a informacion', color: 'secondary'})
+        this.showLoading({
+          tittle: 'Accediendo a informacion',
+          color: 'secondary',
+        })
 
         let datos = await getDolar(ddmmyy)
 
@@ -54,12 +55,12 @@ export default {
 
         if (datos.serie.length > 0) {
           this.value = await datos.serie[0].valor
-        }else {
+        } else {
           this.value = 'Hoy no hay novedades :/'
         }
       } catch (err) {
         //console.log(err)
-      }finally{
+      } finally {
         this.hideLoading()
       }
     },
