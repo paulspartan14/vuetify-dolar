@@ -9,7 +9,7 @@
             locale="es-mx"
             :min="minimDate"
             :max="maxDate"
-            @change="getDolar(date)"
+            @change="printDolar(date)"
           ></v-date-picker>
         </v-card>
 
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { getDolar } from '@/api/dolar'
 import { mapMutations } from 'vuex'
 export default {
   data() {
@@ -39,7 +39,7 @@ export default {
   methods: {
     ...mapMutations(['showLoading', 'hideLoading']),
 
-    async getDolar(day) {
+    async printDolar(day) {
       // acomodar la fecha del picker al formato que pide la api
       const arrayDate = day.split(['-'])
       let ddmmyy = arrayDate[2] + '-' + arrayDate[1] + '-' + arrayDate[0]
@@ -48,10 +48,12 @@ export default {
 
         this.showLoading({tittle:'Accediendo a informacion', color: 'secondary'})
 
-        let datos = await axios.get(`https://mindicador.cl/api/dolar/${ddmmyy}`)
+        let datos = await getDolar(ddmmyy)
 
-        if (datos.data.serie.length > 0) {
-          this.value = await datos.data.serie[0].valor
+        console.log(datos)
+
+        if (datos.serie.length > 0) {
+          this.value = await datos.serie[0].valor
         }else {
           this.value = 'Hoy no hay novedades :/'
         }
@@ -63,7 +65,7 @@ export default {
     },
   },
   created() {
-    this.getDolar(this.date)
+    this.printDolar(this.date)
   },
 }
 </script>
